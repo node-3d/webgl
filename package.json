@@ -47,17 +47,18 @@
 		"url": "https://github.com/node-3d/webgl.git"
 	},
 	"dependencies": {
-		"@node-3d/addon-tools": "^11.0.0",
+		"@node-3d/addon-tools": "^10.0.0",
 		"@node-3d/deps-opengl": "^8.0.0",
 		"@node-3d/segfault": "^4.0.0"
 	},
 	"devDependencies": {
-		"@rslib/core": "^0.21.3",
-		"@types/node": "^24.1.0",
-		"@typescript/native-preview": "^7.0.0-dev.20260503.1",
-		"node-addon-api": "^8.3.0",
-		"oxlint": "^1.65.0",
-		"typescript": "^6.0.3"
+		"@rslib/core": "0.23.2",
+		"@types/node": "24.13.2",
+		"@typescript/native-preview": "7.0.0-dev.20260704.1",
+		"node-addon-api": "8.9.0",
+		"oxlint": "1.72.0",
+		"typescript": "6.0.3",
+		"oxfmt": "0.57.0"
 	},
 	"type": "module",
 	"types": "dist/index.d.ts",
