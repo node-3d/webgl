@@ -2,7 +2,6 @@ import { Document } from '@node-3d/glfw';
 
 import { webgl as gl } from '@node-3d/webgl';
 
-
 Document.setWebgl(gl);
 // oxlint-disable-next-line no-unused-vars
 const doc = new Document();
@@ -15,7 +14,3 @@ OpenGL
 	renderer  : ${gl.getParameter(gl.RENDERER)}
 	extensions: ${gl.getSupportedExtensions().length}
 `);
-
-
-
-

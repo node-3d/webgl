@@ -32,5 +32,8 @@ jobs:
       - name: Install Modules
         run: npm ci
 
+      - name: Run Format Check
+        run: npm run format:ci
+
       - name: Run Lint
         run: npm run lint:all

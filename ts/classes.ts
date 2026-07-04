@@ -10,7 +10,7 @@ export type TResourceId = number;
 
 export class WebGLObject<TResource = TResourceId> {
 	public _: TResource;
-	
+
 	public constructor(_: TResource) {
 		this._ = _;
 	}
@@ -18,13 +18,13 @@ export class WebGLObject<TResource = TResourceId> {
 
 export class WebGLActiveInfo {
 	public _: TActiveInfo;
-	
+
 	public size: number;
-	
+
 	public type: number;
-	
+
 	public name: string;
-	
+
 	public constructor(_: TActiveInfo) {
 		this._ = _;
 		this.size = _.size;

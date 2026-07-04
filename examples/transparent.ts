@@ -3,12 +3,15 @@ import { Document } from '@node-3d/glfw';
 
 import { webgl as gl } from '@node-3d/webgl';
 import {
-	cubeTexCoords, cubeVertexIndices, cubeVertexNormals, cubeVertices, transparentShaders,
+	cubeTexCoords,
+	cubeVertexIndices,
+	cubeVertexNormals,
+	cubeVertices,
+	transparentShaders,
 } from './utils/presets.ts';
 import { buildShader } from './utils/build-shader.ts';
 import { mat4, mat3, vec3 } from './utils/matrix.ts';
 import { deg2rad } from './utils/deg2rad.ts';
-
 
 const lighting = false;
 const ambientR = 0.2;
@@ -24,15 +27,14 @@ const directionalR = 0.8;
 const directionalG = 0.8;
 const directionalB = 0.8;
 
-const lightingDirection = [
-	lightDirectionX,
-	lightDirectionY,
-	lightDirectionZ,
-];
+const lightingDirection = [lightDirectionX, lightDirectionY, lightDirectionZ];
 
 Document.setWebgl(gl);
 const document = new Document({
-	vsync: !true, autoEsc: true, autoFullscreen: true, title: 'Transparent',
+	vsync: !true,
+	autoEsc: true,
+	autoFullscreen: true,
+	title: 'Transparent',
 });
 
 const shaderProgram = buildShader(transparentShaders);
@@ -69,26 +71,23 @@ const shaderVars: TAttributes = {
 	alphaUniform: gl.getUniformLocation(shaderProgram, 'uAlpha'),
 };
 
-
 const glassTexture = gl.createTexture();
 const glassTextureImage = new Image();
 glassTextureImage.on('load', () => {
 	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-	
+
 	gl.bindTexture(gl.TEXTURE_2D, glassTexture);
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, glassTextureImage);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
 	gl.generateMipmap(gl.TEXTURE_2D);
-	
+
 	gl.bindTexture(gl.TEXTURE_2D, null);
 });
 glassTextureImage.src = 'img/glass.gif';
 
-
 const mvMatrix = mat4.create();
 const pMatrix = mat4.create();
-
 
 const setMatrixUniforms = () => {
 	gl.uniformMatrix4fv(shaderVars.pMatrixUniform, false, pMatrix);
@@ -97,7 +96,7 @@ const setMatrixUniforms = () => {
 	mat4.toInverseMat3(mvMatrix, normalMatrix);
 	mat3.transpose(normalMatrix);
 	gl.uniformMatrix3fv(shaderVars.nMatrixUniform, false, normalMatrix);
-}
+};
 let xRot = 0;
 let xSpeed = 5;
 
@@ -107,7 +106,6 @@ let ySpeed = -5;
 const translateVec = [0.0, 0.0, -5.0];
 const rotate100 = [1, 0, 0];
 const rotate010 = [0, 1, 0];
-
 
 const currentlyPressedKeys: Record<number, boolean> = {};
 
@@ -174,44 +172,59 @@ const cubeVertexIndexBufferNumItems = 36;
 const drawScene = () => {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
-	
+
 	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-	
+
 	gl.useProgram(shaderProgram);
 	gl.enableVertexAttribArray(shaderVars.vertexPositionAttribute);
 	gl.enableVertexAttribArray(shaderVars.vertexNormalAttribute);
 	gl.enableVertexAttribArray(shaderVars.textureCoordAttribute);
 	gl.enableVertexAttribArray(shaderVars.vertexColorAttribute);
-	
+
 	mat4.perspective(45, gl.drawingBufferWidth / gl.drawingBufferHeight, 0.1, 100.0, pMatrix);
-	
+
 	mat4.identity(mvMatrix);
-	
+
 	mat4.translate(mvMatrix, translateVec);
-	
+
 	mat4.rotate(mvMatrix, deg2rad(xRot), rotate100);
 	mat4.rotate(mvMatrix, deg2rad(yRot), rotate010);
-	
+
 	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
 	gl.vertexAttribPointer(
-		shaderVars.vertexPositionAttribute, cubeVertexPositionBufferItemSize, gl.FLOAT, false, 0, 0
+		shaderVars.vertexPositionAttribute,
+		cubeVertexPositionBufferItemSize,
+		gl.FLOAT,
+		false,
+		0,
+		0,
 	);
-	
+
 	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
 	gl.vertexAttribPointer(
-		shaderVars.vertexNormalAttribute, cubeVertexNormalBufferItemSize, gl.FLOAT, false, 0, 0
+		shaderVars.vertexNormalAttribute,
+		cubeVertexNormalBufferItemSize,
+		gl.FLOAT,
+		false,
+		0,
+		0,
 	);
-	
+
 	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
 	gl.vertexAttribPointer(
-		shaderVars.textureCoordAttribute, cubeVertexTextureCoordBufferItemSize, gl.FLOAT, false, 0, 0
+		shaderVars.textureCoordAttribute,
+		cubeVertexTextureCoordBufferItemSize,
+		gl.FLOAT,
+		false,
+		0,
+		0,
 	);
-	
+
 	gl.activeTexture(gl.TEXTURE0);
 	gl.bindTexture(gl.TEXTURE_2D, glassTexture);
 	gl.uniform1i(shaderVars.samplerUniform, 0);
-	
+
 	if (blending > 0) {
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 		gl.enable(gl.BLEND);
@@ -221,60 +234,43 @@ const drawScene = () => {
 		gl.disable(gl.BLEND);
 		gl.enable(gl.DEPTH_TEST);
 	}
-	
+
 	gl.uniform1i(shaderVars.useLightingUniform, lighting);
 	if (lighting) {
-		gl.uniform3f(
-			shaderVars.ambientColorUniform,
-			ambientR,
-			ambientG,
-			ambientB,
-		);
-		
+		gl.uniform3f(shaderVars.ambientColorUniform, ambientR, ambientG, ambientB);
+
 		const adjustedLD = vec3.create();
 		vec3.normalize(lightingDirection, adjustedLD);
 		vec3.scale(adjustedLD, -1);
 		gl.uniform3fv(shaderVars.lightingDirectionUniform, adjustedLD);
-		
-		gl.uniform3f(
-			shaderVars.directionalColorUniform,
-			directionalR,
-			directionalG,
-			directionalB,
-		);
+
+		gl.uniform3f(shaderVars.directionalColorUniform, directionalR, directionalG, directionalB);
 	}
-	
+
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
 	setMatrixUniforms();
 	gl.drawElements(gl.TRIANGLES, cubeVertexIndexBufferNumItems, gl.UNSIGNED_SHORT, 0);
-	
+
 	// Cleanup GL state
 	gl.bindTexture(gl.TEXTURE_2D, null);
 	gl.bindBuffer(gl.ARRAY_BUFFER, null);
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 	gl.useProgram(null);
-}
+};
 let prevTime = Date.now();
 let frames = 0;
 
 document.loop((now) => {
-	xRot = (xSpeed * now) * 0.001;
-	yRot = (ySpeed * now) * 0.001;
-	
+	xRot = xSpeed * now * 0.001;
+	yRot = ySpeed * now * 0.001;
+
 	drawScene();
-	
+
 	frames++;
 	const time = now;
 	if (time >= prevTime + 2000) {
-		console.log(
-			'FPS:', Math.floor((frames * 1000) / (time - prevTime)),
-		);
+		console.log('FPS:', Math.floor((frames * 1000) / (time - prevTime)));
 		prevTime = time;
 		frames = 0;
 	}
 });
-
-
-
-
-

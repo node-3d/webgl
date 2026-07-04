@@ -40,7 +40,9 @@
 		"build:ci": "rslib build",
 		"build:watch": "rslib build --watch",
 		"lint:ts": "tsgo -p tsconfig.json --noEmit",
-		"prepare": "npm run build:ci"
+		"prepare": "npm run build:ci",
+		"format:ts": "oxfmt -c ./oxfmt.config.ts --no-error-on-unmatched-pattern \"**/*.{js,jsx,ts,tsx}\"",
+		"format:ci": "oxfmt -c ./oxfmt.config.ts --check --no-error-on-unmatched-pattern \"**/*.{js,jsx,ts,tsx}\""
 	},
 	"repository": {
 		"type": "git",

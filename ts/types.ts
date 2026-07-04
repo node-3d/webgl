@@ -1,23 +1,24 @@
-import type { TExtensions } from "./extensions";
+import type { TExtensions } from './extensions';
 
 export type TContextAttributes = Readonly<{
-	alpha: boolean,
-	antialias: boolean,
-	depth: boolean,
-	desynchronized: boolean,
-	failIfMajorPerformanceCaveat: boolean,
-	powerPreference: 'default' | 'low-power' | 'high-performance',
-	premultipliedAlpha: boolean,
-	preserveDrawingBuffer: boolean,
-	stencil: boolean,
+	alpha: boolean;
+	antialias: boolean;
+	depth: boolean;
+	desynchronized: boolean;
+	failIfMajorPerformanceCaveat: boolean;
+	powerPreference: 'default' | 'low-power' | 'high-performance';
+	premultipliedAlpha: boolean;
+	preserveDrawingBuffer: boolean;
+	stencil: boolean;
 }>;
 
 export type TSize = Readonly<{ width: number; height: number }>;
 
-export type TImage = TSize & Readonly<{
-	data: Buffer | null;
-	noflip?: boolean;
-}>;
+export type TImage = TSize &
+	Readonly<{
+		data: Buffer | null;
+		noflip?: boolean;
+	}>;
 
 export type TNativeArrayData = ArrayBuffer | ArrayBufferView | Buffer;
 export type TNativeImage = Readonly<{
@@ -28,20 +29,24 @@ export type TNativeImage = Readonly<{
 }>;
 
 export type TProgramBinary = Readonly<{ binary: string; binaryFormat: number }>;
-export type TShaderPrecisionFormat = Readonly<{ precision: number; rangeMax: number; rangeMin: number }>;
+export type TShaderPrecisionFormat = Readonly<{
+	precision: number;
+	rangeMax: number;
+	rangeMin: number;
+}>;
 
 export type TNativeImageData = TNativeArrayData | TNativeImage;
 
 type NumberTypedArray =
-  | Int8Array
-  | Uint8Array
-  | Uint8ClampedArray
-  | Int16Array
-  | Uint16Array
-  | Int32Array
-  | Uint32Array
-  | Float32Array
-  | Float64Array;
+	| Int8Array
+	| Uint8Array
+	| Uint8ClampedArray
+	| Int16Array
+	| Uint16Array
+	| Int32Array
+	| Uint32Array
+	| Float32Array
+	| Float64Array;
 
 export type TFloatArray = number[] | Float32Array;
 export type TIntArray = number[] | Int32Array;

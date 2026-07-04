@@ -16,10 +16,20 @@ import type {
 	WebGLUniformLocation as WebGLUniformLocationImpl,
 	WebGLVertexArrayObject as WebGLVertexArrayObjectImpl,
 } from './classes.ts';
-import type { TArrayValue, TFloatArray, TImage, TIntArray, TNativeImageData, TProgramBinary, TShaderPrecisionFormat, TUintArray, TWebGLState } from './types.ts';
+import type {
+	TArrayValue,
+	TFloatArray,
+	TImage,
+	TIntArray,
+	TNativeImageData,
+	TProgramBinary,
+	TShaderPrecisionFormat,
+	TUintArray,
+	TWebGLState,
+} from './types.ts';
 
 type TMutable<T> = {
-  -readonly [P in keyof T]: T[P];
+	-readonly [P in keyof T]: T[P];
 };
 
 export type TWebGLConstructors = {
@@ -62,7 +72,13 @@ export type TWebGLOverrides = {
 	bindTransformFeedback: (target: number, feedback?: TOptional<WebGLTransformFeedback>) => void;
 	bindVertexArray: (vertexArray?: TOptional<WebGLVertexArrayObject>) => void;
 	bufferData: {
-		(target: number, data: ArrayBufferView, usage: number, srcOffset?: number, length?: number): void;
+		(
+			target: number,
+			data: ArrayBufferView,
+			usage: number,
+			srcOffset?: number,
+			length?: number,
+		): void;
 		(target: number, size: number, usage: number): void;
 	};
 	bufferSubData: (target: number, offset: number, data: TArrayValue) => void;
@@ -99,16 +115,26 @@ export type TWebGLOverrides = {
 		uniformBlockIndex: number,
 		pname: number,
 	) => boolean | number | Uint32Array | null;
-	getActiveUniforms: (program: WebGLProgram, indices: readonly number[], pname: number) => number[];
+	getActiveUniforms: (
+		program: WebGLProgram,
+		indices: readonly number[],
+		pname: number,
+	) => number[];
 	getAttachedShaders: (program: WebGLProgram) => WebGLShader[];
 	getAttribLocation: (program: TOptional<WebGLProgram>, name: string) => number;
 	getFragDataLocation: (program: TOptional<WebGLProgram>, name: string) => number;
 	getParameter: (name: number) => unknown;
 	getProgramBinary: (program?: TOptional<WebGLProgram>) => TProgramBinary;
 	getProgramInfoLog: (program?: TOptional<WebGLProgram>) => string;
-	getProgramParameter: (program: TOptional<WebGLProgram>, name: number) => number | boolean | null;
+	getProgramParameter: (
+		program: TOptional<WebGLProgram>,
+		name: number,
+	) => number | boolean | null;
 	getQueryParameter: (query: TOptional<WebGLQuery>, pname: number) => number | boolean | null;
-	getSamplerParameter: (sampler: TOptional<WebGLSampler>, pname: number) => number | null | undefined;
+	getSamplerParameter: (
+		sampler: TOptional<WebGLSampler>,
+		pname: number,
+	) => number | null | undefined;
 	getShaderInfoLog: (shader?: TOptional<WebGLShader>) => string;
 	getShaderParameter: (shader: TOptional<WebGLShader>, pname: number) => number | boolean | null;
 	getShaderPrecisionFormat: (shaderType: number, precisionType: number) => TShaderPrecisionFormat;
@@ -116,9 +142,15 @@ export type TWebGLOverrides = {
 	getSupportedExtensions: () => string[];
 	getSyncParameter: (sync: WebGLSync, pname: number) => number | null;
 	getTransformFeedbackVarying: (program: WebGLProgram, index: number) => WebGLActiveInfo;
-	getUniform: (program?: TOptional<WebGLProgram>, location?: TOptional<WebGLUniformLocation>) => unknown;
+	getUniform: (
+		program?: TOptional<WebGLProgram>,
+		location?: TOptional<WebGLUniformLocation>,
+	) => unknown;
 	getUniformBlockIndex: (program: TOptional<WebGLProgram>, name: string) => number;
-	getUniformfv: (program?: TOptional<WebGLProgram>, location?: TOptional<WebGLUniformLocation>) => number[] | undefined;
+	getUniformfv: (
+		program?: TOptional<WebGLProgram>,
+		location?: TOptional<WebGLUniformLocation>,
+	) => number[] | undefined;
 	getUniformIndices: (program?: TOptional<WebGLProgram>, names?: readonly string[]) => number[];
 	getUniformLocation: (program: WebGLProgram, name: string) => WebGLUniformLocation;
 	isBuffer: (buffer?: TOptional<WebGLBuffer>) => boolean;
@@ -140,8 +172,33 @@ export type TWebGLOverrides = {
 	samplerParameteri: (sampler: TOptional<WebGLSampler>, pname: number, param: number) => void;
 	shaderBinary: (shaders: readonly WebGLShader[], binaryFormat: number, binary: string) => void;
 	shaderSource: (shader: TOptional<WebGLShader>, code: string) => void;
-	texImage2D: (...args: [target: number, level: number, internalformat: number, width: number, height: number, border: number, format: number, type: number, data?: number | TNativeImageData | null] | [target: number, level: number, internalformat: number, format: number, type: number, data: TImage]) => void;
-	transformFeedbackVaryings: (program: WebGLProgram, varyings: readonly string[], bufferMode: number) => void;
+	texImage2D: (
+		...args:
+			| [
+					target: number,
+					level: number,
+					internalformat: number,
+					width: number,
+					height: number,
+					border: number,
+					format: number,
+					type: number,
+					data?: number | TNativeImageData | null,
+			  ]
+			| [
+					target: number,
+					level: number,
+					internalformat: number,
+					format: number,
+					type: number,
+					data: TImage,
+			  ]
+	) => void;
+	transformFeedbackVaryings: (
+		program: WebGLProgram,
+		varyings: readonly string[],
+		bufferMode: number,
+	) => void;
 	uniform1f: (location: WebGLUniformLocation, x: number) => void;
 	uniform1fv: (location: WebGLUniformLocation, values: TFloatArray) => void;
 	uniform1i: (location: WebGLUniformLocation, value: number | boolean) => void;
@@ -164,18 +221,64 @@ export type TWebGLOverrides = {
 	uniform4fv: (location: WebGLUniformLocation, values: TFloatArray) => void;
 	uniform4i: (location: WebGLUniformLocation, x: number, y: number, z: number, w: number) => void;
 	uniform4iv: (location: WebGLUniformLocation, values: TIntArray) => void;
-	uniform4ui: (location: WebGLUniformLocation, x: number, y: number, z: number, w: number) => void;
+	uniform4ui: (
+		location: WebGLUniformLocation,
+		x: number,
+		y: number,
+		z: number,
+		w: number,
+	) => void;
 	uniform4uiv: (location: WebGLUniformLocation, values: TUintArray) => void;
-	uniformBlockBinding: (program: WebGLProgram, uniformBlockIndex: number, uniformBlockBinding: number) => void;
-	uniformMatrix2fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix2x3fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix2x4fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix3fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix3x2fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix3x4fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix4fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix4x2fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
-	uniformMatrix4x3fv: (location: WebGLUniformLocation, transpose: boolean, values: TFloatArray) => void;
+	uniformBlockBinding: (
+		program: WebGLProgram,
+		uniformBlockIndex: number,
+		uniformBlockBinding: number,
+	) => void;
+	uniformMatrix2fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix2x3fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix2x4fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix3fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix3x2fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix3x4fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix4fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix4x2fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
+	uniformMatrix4x3fv: (
+		location: WebGLUniformLocation,
+		transpose: boolean,
+		values: TFloatArray,
+	) => void;
 	vertexAttrib1fv: (index: number, values: TFloatArray) => void;
 	vertexAttrib2fv: (index: number, values: TFloatArray) => void;
 	vertexAttrib3fv: (index: number, values: TFloatArray) => void;
@@ -189,8 +292,11 @@ export type TWebGLOverrides = {
 
 export type TNativeTrimmed = Omit<TNative, keyof TWebGLOverrides>;
 
-export type TNativeMutable = TMutable<TNativeTrimmed> & TWebGLOverrides & TWebGLConstructors & TMutable<TWebGLState> & {
-	__isInited: boolean;
-	_versionString: string;
-	canvas?: { width: number, height: number };
-};
+export type TNativeMutable = TMutable<TNativeTrimmed> &
+	TWebGLOverrides &
+	TWebGLConstructors &
+	TMutable<TWebGLState> & {
+		__isInited: boolean;
+		_versionString: string;
+		canvas?: { width: number; height: number };
+	};

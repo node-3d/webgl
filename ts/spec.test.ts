@@ -15,7 +15,7 @@ const testSpec = (name: string, parsed: ParsedSpec) => {
 				assert.ok(webgl[constant as keyof TWebGL] !== undefined);
 			});
 		}
-		
+
 		for (const method of parsed.methods) {
 			it(`\`${method}()\` method exposed`, () => {
 				assert.strictEqual(typeof webgl[method as keyof TWebGL], 'function');
@@ -27,7 +27,6 @@ const testSpec = (name: string, parsed: ParsedSpec) => {
 describe('WebGL Specs', () => {
 	testSpec('WebGL 1.03', parsedWebgl103);
 	testSpec('WebGL 2.00', parsedWebgl200);
-	
+
 	return Promise.resolve();
 });
-

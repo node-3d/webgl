@@ -100,15 +100,17 @@ const identityMat4 = (out: TMat4): TMat4 => {
 	return out;
 };
 
-const frustumMat4 = (values: readonly [
-	left: number,
-	right: number,
-	bottom: number,
-	top: number,
-	near: number,
-	far: number,
-	out: TMat4,
-]): TMat4 => {
+const frustumMat4 = (
+	values: readonly [
+		left: number,
+		right: number,
+		bottom: number,
+		top: number,
+		near: number,
+		far: number,
+		out: TMat4,
+	],
+): TMat4 => {
 	const [left, right, bottom, top, near, far, out] = values;
 	const width = right - left;
 	const height = top - bottom;
@@ -146,15 +148,17 @@ const perspectiveMat4 = (
 	return frustumMat4([-right, right, -top, top, near, far, out]);
 };
 
-const orthoMat4 = (...args: [
-	left: number,
-	right: number,
-	bottom: number,
-	top: number,
-	near: number,
-	far: number,
-	out: TMat4,
-]): TMat4 => {
+const orthoMat4 = (
+	...args: [
+		left: number,
+		right: number,
+		bottom: number,
+		top: number,
+		near: number,
+		far: number,
+		out: TMat4,
+	]
+): TMat4 => {
 	const [left, right, bottom, top, near, far, out] = args;
 	const width = right - left;
 	const height = top - bottom;
@@ -195,7 +199,12 @@ const translateMat4 = (input: TMat4, vector: TVec3Input, out: TMat4 = input): TM
 	return out;
 };
 
-const rotateMat4 = (input: TMat4, angle: number, axis: TVec3Input, out: TMat4 = input): TMat4 | null => {
+const rotateMat4 = (
+	input: TMat4,
+	angle: number,
+	axis: TVec3Input,
+	out: TMat4 = input,
+): TMat4 | null => {
 	const normalized = normalizeVec3(axis);
 	const x = normalized[0];
 	const y = normalized[1];
