@@ -9,7 +9,6 @@ on:
 jobs:
   create_release:
     name: Create Release
-    if: contains('["raub"]', github.actor)
     runs-on: ubuntu-latest
 
     outputs:
@@ -18,7 +17,7 @@ jobs:
     steps:
 
       - name: Fetch Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -52,7 +51,7 @@ jobs:
     steps:
 
       - name: Fetch Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
