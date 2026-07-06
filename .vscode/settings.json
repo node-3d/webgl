@@ -62,5 +62,14 @@
 	},
 	"[css]": {
 		"editor.defaultFormatter": "oxc.oxc-vscode"
+	},
+	"terminal.integrated.profiles.windows": {
+		"PowerShell": {
+			"source": "PowerShell",
+			"args": [
+				"-ExecutionPolicy",
+				"Bypass"
+			]
+		}
 	}
 }

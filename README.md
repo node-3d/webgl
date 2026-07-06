@@ -16,7 +16,7 @@ npm install @node-3d/webgl
 ![Example](examples/screenshot.jpg)
 
 **TL;DR**: For a quick start, use [@node-3d/core](https://github.com/node-3d/core)
-or look at [Examples](/examples).
+or look at [Examples](examples).
 
 ```js
 import { webgl } from '@node-3d/webgl';
@@ -67,10 +67,10 @@ several additional interfaces must also be provided to mimic the browser.
 
 * Package [@node-3d/glfw](https://github.com/node-3d/glfw) provides window/context handling
 and additional browser-like interfaces.
-* Package [@node-3d/image](https://github.com/node-3d/glfw) loads and serves the image data as web
+* Package [@node-3d/image](https://github.com/node-3d/image) loads and serves the image data as web
 [Image](https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement#example) would.
 
-See [this example](/examples/textured.ts) using both **GLFW** and **Image**.
+See [this example](examples/textured.ts) using both **GLFW** and **Image**.
 The main idea being as follows:
 
 ```js
@@ -120,7 +120,7 @@ into a `glewInit()` call. See [GLEW docs](https://glew.sourceforge.net/basic.htm
 it does and if you need it (probably "yes"?).
 
 
-## MacOS Note
+## macOS Note
 
 Some features may depend on OpenGL profile being used. Core profile
 is necessary for VAO and other OpenGL 3.2+ features. Depending on your windowing
