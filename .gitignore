@@ -11,3 +11,4 @@ src/build/
 src/node_modules/
 bin-*/
 *.log
+*.tgz
