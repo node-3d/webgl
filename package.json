@@ -46,7 +46,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/node-3d/webgl.git"
+		"url": "git+https://github.com/node-3d/webgl.git"
 	},
 	"dependencies": {
 		"@node-3d/addon-tools": "^10.0.0",
