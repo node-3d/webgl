@@ -18,28 +18,21 @@
 #include "vertexarrays.cpp"
 
 /**
- * @link https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/modules/webgl/WebGL2RenderingContextBase.cpp
- * @link https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/modules/webgl/WebGLRenderingContextBase.cpp
+ * @link
+ * https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/modules/webgl/WebGL2RenderingContextBase.cpp
+ * @link
+ * https://chromium.googlesource.com/chromium/blink/+/refs/heads/main/Source/modules/webgl/WebGLRenderingContextBase.cpp
  * @link https://registry.khronos.org/webgl/specs/latest/2.0/#3.1
  */
 
-#define JS_CUSTOM_CONSTANT(name, constant)                                    \
-	exports.Set(#name, static_cast<double>(constant));
+#define JS_CUSTOM_CONSTANT(name, constant) exports.Set(#name, static_cast<double>(constant));
 
-#define JS_GL_CONSTANT(name)                                                  \
-	exports.Set(#name, static_cast<double>(GL_ ## name));
+#define JS_GL_CONSTANT(name) exports.Set(#name, static_cast<double>(GL_##name));
 
-#define JS_GL_SET_METHOD(name)                                                \
-	exports.DefineProperty(                                                   \
-		Napi::PropertyDescriptor::Function(                                   \
-			env,                                                              \
-			exports,                                                          \
-			#name,                                                            \
-			webgl::name,                                                      \
-			napi_writable                                                     \
-		)                                                                     \
+#define JS_GL_SET_METHOD(name)                                                                               \
+	exports.DefineProperty(                                                                                  \
+	    Napi::PropertyDescriptor::Function(env, exports, #name, webgl::name, napi_writable)                  \
 	);
-
 
 static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(init);
@@ -52,7 +45,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(endQuery);
 	JS_GL_SET_METHOD(getQueryParameter);
 	JS_GL_SET_METHOD(getQuery);
-	
+
 	// Sampler
 	JS_GL_SET_METHOD(createSampler);
 	JS_GL_SET_METHOD(deleteSampler);
@@ -61,7 +54,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(samplerParameterf);
 	JS_GL_SET_METHOD(samplerParameteri);
 	JS_GL_SET_METHOD(getSamplerParameter);
-	
+
 	// Sync
 	JS_GL_SET_METHOD(fenceSync);
 	JS_GL_SET_METHOD(deleteSync);
@@ -69,7 +62,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(clientWaitSync);
 	JS_GL_SET_METHOD(waitSync);
 	JS_GL_SET_METHOD(getSyncParameter);
-	
+
 	// Attrib
 	JS_GL_SET_METHOD(bindAttribLocation);
 	JS_GL_SET_METHOD(disableVertexAttribArray);
@@ -94,14 +87,14 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(vertexAttribI4uiv);
 	JS_GL_SET_METHOD(vertexAttribDivisor);
 	JS_GL_SET_METHOD(vertexAttribDivisor);
-	
+
 	// Blend
 	JS_GL_SET_METHOD(blendColor);
 	JS_GL_SET_METHOD(blendEquation);
 	JS_GL_SET_METHOD(blendEquationSeparate);
 	JS_GL_SET_METHOD(blendFunc);
 	JS_GL_SET_METHOD(blendFuncSeparate);
-	
+
 	// VBO
 	JS_GL_SET_METHOD(createBuffer);
 	JS_GL_SET_METHOD(deleteBuffer);
@@ -115,7 +108,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(getBufferSubData);
 	JS_GL_SET_METHOD(getBufferParameter);
 	JS_GL_SET_METHOD(readBuffer);
-	
+
 	// FBO
 	JS_GL_SET_METHOD(createFramebuffer);
 	JS_GL_SET_METHOD(deleteFramebuffer);
@@ -129,7 +122,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(framebufferTexture2D);
 	JS_GL_SET_METHOD(framebufferTextureLayer);
 	JS_GL_SET_METHOD(getFramebufferAttachmentParameter);
-	
+
 	// Program
 	JS_GL_SET_METHOD(createProgram);
 	JS_GL_SET_METHOD(deleteProgram);
@@ -145,7 +138,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(programBinary);
 	JS_GL_SET_METHOD(getUniformBlockIndex);
 	JS_GL_SET_METHOD(getUniformIndices);
-	
+
 	// Draw
 	JS_GL_SET_METHOD(drawArrays);
 	JS_GL_SET_METHOD(drawElements);
@@ -153,7 +146,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(drawArraysInstanced);
 	JS_GL_SET_METHOD(drawElementsInstanced);
 	JS_GL_SET_METHOD(drawRangeElements);
-	
+
 	// RBO
 	JS_GL_SET_METHOD(createRenderbuffer);
 	JS_GL_SET_METHOD(deleteRenderbuffer);
@@ -162,7 +155,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(getRenderbufferParameter);
 	JS_GL_SET_METHOD(renderbufferStorage);
 	JS_GL_SET_METHOD(renderbufferStorageMultisample);
-	
+
 	// Shader
 	JS_GL_SET_METHOD(deleteShader);
 	JS_GL_SET_METHOD(createShader);
@@ -178,7 +171,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(shaderSource);
 	JS_GL_SET_METHOD(releaseShaderCompiler);
 	JS_GL_SET_METHOD(shaderBinary);
-	
+
 	// Stencil
 	JS_GL_SET_METHOD(clearStencil);
 	JS_GL_SET_METHOD(stencilFunc);
@@ -187,7 +180,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(stencilMaskSeparate);
 	JS_GL_SET_METHOD(stencilOp);
 	JS_GL_SET_METHOD(stencilOpSeparate);
-	
+
 	// Texture
 	JS_GL_SET_METHOD(createTexture);
 	JS_GL_SET_METHOD(deleteTexture);
@@ -211,7 +204,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(copyTexSubImage3D);
 	JS_GL_SET_METHOD(texStorage3D);
 	JS_GL_SET_METHOD(texSubImage3D);
-	
+
 	// Uniform
 	JS_GL_SET_METHOD(getActiveUniform);
 	JS_GL_SET_METHOD(getUniform);
@@ -254,13 +247,13 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(uniformBlockBinding);
 	JS_GL_SET_METHOD(getActiveUniformBlockParameter);
 	JS_GL_SET_METHOD(getActiveUniformBlockName);
-	
+
 	// VAO
 	JS_GL_SET_METHOD(createVertexArray);
 	JS_GL_SET_METHOD(deleteVertexArray);
 	JS_GL_SET_METHOD(isVertexArray);
 	JS_GL_SET_METHOD(bindVertexArray);
-	
+
 	// Transform feedback
 	JS_GL_SET_METHOD(createTransformFeedback);
 	JS_GL_SET_METHOD(deleteTransformFeedback);
@@ -272,7 +265,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(resumeTransformFeedback);
 	JS_GL_SET_METHOD(transformFeedbackVaryings);
 	JS_GL_SET_METHOD(getTransformFeedbackVarying);
-	
+
 	// Clear
 	JS_GL_SET_METHOD(clear);
 	JS_GL_SET_METHOD(clearColor);
@@ -281,7 +274,7 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(clearBufferiv);
 	JS_GL_SET_METHOD(clearBufferuiv);
 	JS_GL_SET_METHOD(clearBufferfi);
-	
+
 	// Misc OpenGL Functions
 	JS_GL_SET_METHOD(colorMask);
 	JS_GL_SET_METHOD(cullFace);
@@ -310,7 +303,6 @@ static inline void initMethods(Napi::Env env, Napi::Object exports) {
 	JS_GL_SET_METHOD(getIndexedParameter);
 }
 
-
 /**
  * WebGL 1.03 constants as per WebGL Specification
  *
@@ -323,7 +315,7 @@ static inline void initConstantsWebgl103(Napi::Env env, Napi::Object exports) {
 	JS_CUSTOM_CONSTANT(UNPACK_COLORSPACE_CONVERSION_WEBGL, 0x9243);
 	JS_CUSTOM_CONSTANT(UNPACK_FLIP_Y_WEBGL, 0x9240);
 	JS_CUSTOM_CONSTANT(UNPACK_PREMULTIPLY_ALPHA_WEBGL, 0x9241);
-	
+
 	JS_GL_CONSTANT(ACTIVE_ATTRIBUTES);
 	JS_GL_CONSTANT(ACTIVE_TEXTURE);
 	JS_GL_CONSTANT(ACTIVE_UNIFORMS);
@@ -617,7 +609,6 @@ static inline void initConstantsWebgl103(Napi::Env env, Napi::Object exports) {
 	JS_GL_CONSTANT(ZERO);
 }
 
-
 /**
  * WebGL 2.00 constants as per WebGL 2 Specification
  *
@@ -625,7 +616,7 @@ static inline void initConstantsWebgl103(Napi::Env env, Napi::Object exports) {
  */
 static inline void initConstantsWebgl200(Napi::Env env, Napi::Object exports) {
 	JS_CUSTOM_CONSTANT(MAX_CLIENT_WAIT_TIMEOUT_WEBGL, 0x9247);
-	
+
 	JS_GL_CONSTANT(ACTIVE_UNIFORM_BLOCKS);
 	JS_GL_CONSTANT(ALREADY_SIGNALED);
 	JS_GL_CONSTANT(ANY_SAMPLES_PASSED_CONSERVATIVE);
@@ -892,7 +883,6 @@ static inline void initConstantsWebgl200(Napi::Env env, Napi::Object exports) {
 	JS_GL_CONSTANT(WAIT_FAILED);
 }
 
-
 static inline void initConstantsOther(Napi::Env env, Napi::Object exports) {
 	JS_GL_CONSTANT(ACTIVE_ATTRIBUTE_MAX_LENGTH);
 	JS_GL_CONSTANT(ACTIVE_UNIFORM_MAX_LENGTH);
@@ -911,18 +901,16 @@ static inline void initConstantsOther(Napi::Env env, Napi::Object exports) {
 	JS_GL_CONSTANT(TRUE);
 }
 
-
 Napi::Object initModule(Napi::Env env, Napi::Object exports) {
-	webgl::undefined = env.Undefined();
-	
+	webgl::undefined = JS_UNDEFINED;
+
 	initMethods(env, exports);
-	
+
 	initConstantsWebgl103(env, exports);
 	initConstantsWebgl200(env, exports);
 	initConstantsOther(env, exports);
-	
+
 	return exports;
 }
-
 
 NODE_API_MODULE(webgl, initModule)

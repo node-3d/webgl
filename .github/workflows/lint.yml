@@ -33,7 +33,9 @@ jobs:
         run: npm ci
 
       - name: Run Format Check
-        run: npm run format:ci
+        run: |
+          npm run format:ts:ci
+          npm run format:src:ci
 
       - name: Run Lint
         run: npm run lint:all

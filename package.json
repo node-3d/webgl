@@ -41,8 +41,10 @@
 		"build:watch": "rslib build --watch",
 		"lint:ts": "tsgo -p tsconfig.json --noEmit",
 		"prepare": "npm run build:ci",
+		"format:src": "node -e \"import('@node-3d/addon-tools').then((m) => m.cpclangformat())\" && clang-format -i \"src/cpp/*.cpp\" \"src/cpp/*.hpp\"",
+		"format:src:ci": "node -e \"import('@node-3d/addon-tools').then((m) => m.cpclangformat())\" && clang-format --dry-run --Werror \"src/cpp/*.cpp\" \"src/cpp/*.hpp\"",
 		"format:ts": "oxfmt -c ./oxfmt.config.ts --no-error-on-unmatched-pattern \"**/*.{js,jsx,ts,tsx}\"",
-		"format:ci": "oxfmt -c ./oxfmt.config.ts --check --no-error-on-unmatched-pattern \"**/*.{js,jsx,ts,tsx}\""
+		"format:ts:ci": "oxfmt -c ./oxfmt.config.ts --check --no-error-on-unmatched-pattern \"**/*.{js,jsx,ts,tsx}\""
 	},
 	"repository": {
 		"type": "git",
@@ -61,7 +63,8 @@
 		"oxlint": "1.72.0",
 		"tslib": "2.8.1",
 		"oxfmt": "0.57.0",
-		"typescript": "6.0.3"
+		"typescript": "6.0.3",
+		"clang-format-node": "3.0.7"
 	},
 	"type": "module",
 	"types": "dist/index.d.ts",
