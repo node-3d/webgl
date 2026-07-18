@@ -11,6 +11,22 @@ This is a part of [Node3D](https://github.com/node-3d) project.
 npm install @node-3d/webgl
 ```
 
+## Binary Provenance
+
+Release binary archives for this package are published by public GitHub Actions
+workflows.
+When a release asset includes a GitHub Artifact Attestation, you can verify that
+the downloaded archive was published by the visible workflow in this repository:
+
+```console
+gh release download <tag> -R node-3d/webgl -p <platform>.gz
+gh attestation verify <platform>.gz -R node-3d/webgl
+```
+
+The attestation links the archive to the repository, workflow, commit, and
+release build identity. It does not replace review of the source code, workflow,
+or third-party library contents.
+
 > This addon is ABI-compatible across Node.js versions. **There is no compilation** during `npm install`.
 
 ![Example](examples/screenshot.jpg)
