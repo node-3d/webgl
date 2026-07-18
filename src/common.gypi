@@ -6,7 +6,7 @@
 			'cflags_cc': ['-std=c++20', '-fno-exceptions'],
 		}],
 		['OS=="mac"', {
-			'MACOSX_DEPLOYMENT_TARGET': '10.9',
+			'MACOSX_DEPLOYMENT_TARGET': '13.5',
 			'defines': ['__APPLE__'],
 			'CLANG_CXX_LIBRARY': 'libc++',
 			'OTHER_CFLAGS': ['-std=c++20', '-fno-exceptions'],
