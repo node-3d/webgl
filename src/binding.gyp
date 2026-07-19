@@ -27,8 +27,7 @@
 				],
 			}],
 			['OS=="mac"', {
-				'cflags': ['-Wno-deprecated-declarations'],
-				'cflags_cc': ['-Wno-deprecated-declarations'],
+				'defines': ['GL_SILENCE_DEPRECATION'],
 				'libraries': [
 					'-Wl,-rpath,@loader_path',
 					'-Wl,-rpath,@loader_path/../node_modules/@node-3d/deps-opengl/<(bin)',
