@@ -27,6 +27,8 @@
 				],
 			}],
 			['OS=="mac"', {
+				'cflags': ['-Wno-deprecated-declarations'],
+				'cflags_cc': ['-Wno-deprecated-declarations'],
 				'libraries': [
 					'-Wl,-rpath,@loader_path',
 					'-Wl,-rpath,@loader_path/../node_modules/@node-3d/deps-opengl/<(bin)',
