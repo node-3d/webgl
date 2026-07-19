@@ -4,7 +4,12 @@ defaults:
     shell: bash
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag/version to build. Defaults to package.json version.'
+        required: false
+        type: string
 
 jobs:
   create_release:
@@ -29,7 +34,12 @@ jobs:
 
       - name: Get Package Version
         id: package-version
-        run: node -p "'version='+require('./package').version" >> $GITHUB_OUTPUT
+        run: |
+          release_tag="${{ inputs.release_tag }}"
+          if [ -z "$release_tag" ]; then
+            release_tag="$(node -p "require('./package').version")"
+          fi
+          echo "version=$release_tag" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         id: create_release
@@ -69,7 +79,12 @@ jobs:
 
       - name: Get Package Version
         id: package-version
-        run: node -p "'version='+require('./package').version" >> $GITHUB_OUTPUT
+        run: |
+          release_tag="${{ inputs.release_tag }}"
+          if [ -z "$release_tag" ]; then
+            release_tag="$(node -p "require('./package').version")"
+          fi
+          echo "version=$release_tag" >> "$GITHUB_OUTPUT"
 
       - name: Pack Files
         id: pack-files
