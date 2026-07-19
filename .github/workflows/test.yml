@@ -13,10 +13,35 @@ on:
 
 jobs:
   unit-tests:
-    name: Unit Tests
+    name: Unit Tests (${{ matrix.target }})
     strategy:
-        matrix:
-          os: [ubuntu-22.04, ubuntu-22.04-arm, windows-2022, macos-26]
+      fail-fast: false
+      matrix:
+        include:
+          - target: windows-x64
+            os: windows-2022
+            node_arch: x64
+            archflags: ''
+          - target: windows-arm64
+            os: windows-11-arm
+            node_arch: arm64
+            archflags: ''
+          - target: linux-x64
+            os: ubuntu-22.04
+            node_arch: x64
+            archflags: ''
+          - target: linux-arm64
+            os: ubuntu-22.04-arm
+            node_arch: arm64
+            archflags: ''
+          - target: darwin-x64
+            os: macos-26
+            node_arch: x64
+            archflags: '-arch x86_64'
+          - target: darwin-arm64
+            os: macos-26
+            node_arch: arm64
+            archflags: '-arch arm64'
 
     runs-on: ${{ matrix.os }}
 
@@ -31,14 +56,29 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24.13.0
+          architecture: ${{ matrix.node_arch }}
           cache: 'npm'
 
+      - name: Print Native Target
+        run: |
+          echo "runner=$(uname -s)-$(uname -m)"
+          node -p "'node=' + process.version + ' platform=' + process.platform + ' arch=' + process.arch"
+          npm config get arch
+
       - name: Install Modules
-        run: npm ci
+        run: npm ci --ignore-scripts
+
+      - name: Install Native Dependencies
+        run: |
+          (cd node_modules/@node-3d/deps-opengl && node install.js)
+          (cd node_modules/@node-3d/segfault && node install.js)
 
       - name: Build Current Binary
         run: npm run build:rebuild
+        env:
+          npm_config_arch: ${{ matrix.node_arch }}
+          ARCHFLAGS: ${{ matrix.archflags }}
 
       - name: Run Unit Tests
-        if: matrix.os != 'windows-2022'
+        if: matrix.target == 'linux-x64' || matrix.target == 'linux-arm64' || matrix.target == 'darwin-x64' || matrix.target == 'darwin-arm64'
         run: npm run test:ci
