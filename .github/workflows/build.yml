@@ -109,12 +109,7 @@ jobs:
           npm config get arch
 
       - name: Install Modules
-        run: npm ci --ignore-scripts
-
-      - name: Install Native Dependencies
-        run: |
-          (cd node_modules/@node-3d/deps-opengl && node install.js)
-          (cd node_modules/@node-3d/segfault && node install.js)
+        run: npm ci
 
       - name: Build Current Binary
         run: npm run build:rebuild
