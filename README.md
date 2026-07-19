@@ -11,20 +11,7 @@ This is a part of [Node3D](https://github.com/node-3d) project.
 npm install @node-3d/webgl
 ```
 
-## Binary Origin
 
-Release archives are built by this repository's public GitHub Actions workflows.
-
-Attestations: https://github.com/node-3d/webgl/attestations
-
-To verify a downloaded archive:
-
-```bash
-gh release download <tag> -R node-3d/webgl -p <platform>.gz
-gh attestation verify <platform>.gz -R node-3d/webgl
-```
-
-> This addon is ABI-compatible across Node.js versions. **There is no compilation** during `npm install`.
 
 ![Example](examples/screenshot.jpg)
 
@@ -143,3 +130,17 @@ the profile can be set through the `Window`/`Document`
 [constructor](https://github.com/node-3d/glfw#class-window) or with
 `glfw.windowHint` calls.
 
+## Binary Origin
+
+Release archives are built by this repository's public GitHub Actions workflows.
+
+Attestations: https://github.com/node-3d/webgl/attestations
+
+To verify a downloaded archive:
+
+```bash
+gh release download <tag> -R node-3d/webgl -p <platform>.gz
+gh attestation verify <platform>.gz -R node-3d/webgl
+```
+
+> This addon is ABI-compatible across Node.js versions. **There is no compilation** during `npm install`.
