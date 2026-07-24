@@ -28,9 +28,16 @@ jobs:
         with:
           node-version: 24.13.0
           cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            examples/package-lock.json
 
       - name: Install Modules
         run: npm ci --ignore-scripts
+
+      - name: Install Example Modules
+        run: npm ci --ignore-scripts
+        working-directory: examples
 
       - name: Run Format Check
         run: |
