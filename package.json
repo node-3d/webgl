@@ -1,7 +1,7 @@
 {
 	"author": "Luis Blanco <luisblanco1337@gmail.com>",
 	"name": "@node-3d/webgl",
-	"version": "6.0.0",
+	"version": "6.0.1",
 	"description": "WebGL for Node.js",
 	"license": "MIT",
 	"main": "dist/index.js",
