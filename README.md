@@ -90,6 +90,11 @@ Similarly, these modules are utilized in [@node-3d/core](https://github.com/node
 Using [@node-3d/core](https://github.com/node-3d/core), you can skip setting up
 most environment features for those libs.
 
+Examples that use `@node-3d/image`, `@node-3d/glfw`, or other Node3D packages
+should declare those dependencies where normal install flow provides them. The
+examples are checked as consumer-style code and should not be hidden from lint
+because dependencies are missing.
+
 * [three.js](https://threejs.org/) - known to work well on **Node.js** with this
 implementation of **WebGL**.
 * [PixiJS](https://pixijs.com/) - seems to work with some minor hacks, as proven by this
@@ -129,6 +134,10 @@ In case [@node-3d/glfw](https://github.com/node-3d/glfw) is used,
 the profile can be set through the `Window`/`Document`
 [constructor](https://github.com/node-3d/glfw#class-window) or with
 `glfw.windowHint` calls.
+
+Apple's OpenGL API is deprecated, so macOS builds can emit OpenGL deprecation
+warnings. Native sources define `GL_SILENCE_DEPRECATION` where needed to keep
+expected warnings from obscuring real build failures.
 
 ## Binary Origin
 
