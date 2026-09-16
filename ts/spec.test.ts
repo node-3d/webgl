@@ -28,5 +28,4 @@ describe('WebGL Specs', () => {
 	testSpec('WebGL 1.03', parsedWebgl103);
 	testSpec('WebGL 2.00', parsedWebgl200);
 
-	return Promise.resolve();
 });

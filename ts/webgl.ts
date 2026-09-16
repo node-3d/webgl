@@ -99,7 +99,7 @@ if (!gl.__isInited) {
 		gl._versionString = 'WebGL 2.0';
 	};
 
-	gl.extractId = (x: { _?: number }): number => (x as WebGLObject<number>)._;
+	gl.extractId = (x: { _?: number }): number => (x as WebGLObject)._;
 
 	gl.contextAttributes = {
 		alpha: true,
@@ -116,12 +116,14 @@ if (!gl.__isInited) {
 
 	gl.isContextLost = () => false;
 
+	// oxlint-disable-next-line typescript/no-unnecessary-condition
 	if (gl.drawingBufferWidth === undefined) {
 		Object.defineProperty(gl, 'drawingBufferWidth', {
 			get: () => (gl.canvas ? gl.canvas.width : 1280),
 		});
 	}
 
+	// oxlint-disable-next-line typescript/no-unnecessary-condition
 	if (gl.drawingBufferHeight === undefined) {
 		Object.defineProperty(gl, 'drawingBufferHeight', {
 			get: () => (gl.canvas ? gl.canvas.height : 720),

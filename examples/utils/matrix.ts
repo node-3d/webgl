@@ -1,3 +1,4 @@
+// oxlint-disable complexity
 export type TVec3Input = readonly [number, number, number] | readonly number[] | Float32Array;
 export type TVec3 = Float32Array;
 export type TMat3 = Float32Array;
@@ -11,7 +12,7 @@ const copyArrayLike = (input: ArrayLike<number>, out: Float32Array, maxLength: n
 	const length = Math.min(input.length, maxLength);
 
 	for (let i = 0; i < length; i++) {
-		out[i] = input[i];
+		out[i] = input[i] ?? 0;
 	}
 };
 
@@ -38,9 +39,9 @@ const normalizeVec3 = (input: TVec3Input, out: TVec3 = createVec3()): TVec3 => {
 };
 
 const scaleVec3 = (input: TVec3, value: number, out: TVec3 = input): TVec3 => {
-	out[0] = input[0] * value;
-	out[1] = input[1] * value;
-	out[2] = input[2] * value;
+	out[0] = (input[0] ?? 0) * value;
+	out[1] = (input[1] ?? 0) * value;
+	out[2] = (input[2] ?? 0) * value;
 	return out;
 };
 
@@ -56,28 +57,28 @@ const createMat3 = (input?: ArrayLike<number>): TMat3 => {
 
 const transposeMat3 = (input: TMat3, out: TMat3 = input): TMat3 => {
 	if (out === input) {
-		const a01 = input[1];
-		const a02 = input[2];
-		const a12 = input[5];
+		const a01 = input[1] ?? 0;
+		const a02 = input[2] ?? 0;
+		const a12 = input[5] ?? 0;
 
-		input[1] = input[3];
-		input[2] = input[6];
+		input[1] = input[3] ?? 0;
+		input[2] = input[6] ?? 0;
 		input[3] = a01;
-		input[5] = input[7];
+		input[5] = input[7] ?? 0;
 		input[6] = a02;
 		input[7] = a12;
 		return input;
 	}
 
-	out[0] = input[0];
-	out[1] = input[3];
-	out[2] = input[6];
-	out[3] = input[1];
-	out[4] = input[4];
-	out[5] = input[7];
-	out[6] = input[2];
-	out[7] = input[5];
-	out[8] = input[8];
+	out[0] = input[0] ?? 0;
+	out[1] = input[3] ?? 0;
+	out[2] = input[6] ?? 0;
+	out[3] = input[1] ?? 0;
+	out[4] = input[4] ?? 0;
+	out[5] = input[7] ?? 0;
+	out[6] = input[2] ?? 0;
+	out[7] = input[5] ?? 0;
+	out[8] = input[8] ?? 0;
 	return out;
 };
 
@@ -192,10 +193,10 @@ const translateMat4 = (input: TMat4, vector: TVec3Input, out: TMat4 = input): TM
 		out.set(input);
 	}
 
-	out[12] = input[0] * x + input[4] * y + input[8] * z + input[12];
-	out[13] = input[1] * x + input[5] * y + input[9] * z + input[13];
-	out[14] = input[2] * x + input[6] * y + input[10] * z + input[14];
-	out[15] = input[3] * x + input[7] * y + input[11] * z + input[15];
+	out[12] = (input[0] ?? 0) * x + (input[4] ?? 0) * y + (input[8] ?? 0) * z + (input[12] ?? 0);
+	out[13] = (input[1] ?? 0) * x + (input[5] ?? 0) * y + (input[9] ?? 0) * z + (input[13] ?? 0);
+	out[14] = (input[2] ?? 0) * x + (input[6] ?? 0) * y + (input[10] ?? 0) * z + (input[14] ?? 0);
+	out[15] = (input[3] ?? 0) * x + (input[7] ?? 0) * y + (input[11] ?? 0) * z + (input[15] ?? 0);
 	return out;
 };
 
@@ -206,9 +207,9 @@ const rotateMat4 = (
 	out: TMat4 = input,
 ): TMat4 | null => {
 	const normalized = normalizeVec3(axis);
-	const x = normalized[0];
-	const y = normalized[1];
-	const z = normalized[2];
+	const x = normalized[0] ?? 0;
+	const y = normalized[1] ?? 0;
+	const z = normalized[2] ?? 0;
 
 	if (x === 0 && y === 0 && z === 0) {
 		return null;
@@ -217,18 +218,18 @@ const rotateMat4 = (
 	const sin = Math.sin(angle);
 	const cos = Math.cos(angle);
 	const t = 1 - cos;
-	const a00 = input[0];
-	const a01 = input[1];
-	const a02 = input[2];
-	const a03 = input[3];
-	const a10 = input[4];
-	const a11 = input[5];
-	const a12 = input[6];
-	const a13 = input[7];
-	const a20 = input[8];
-	const a21 = input[9];
-	const a22 = input[10];
-	const a23 = input[11];
+	const a00 = input[0] ?? 0;
+	const a01 = input[1] ?? 0;
+	const a02 = input[2] ?? 0;
+	const a03 = input[3] ?? 0;
+	const a10 = input[4] ?? 0;
+	const a11 = input[5] ?? 0;
+	const a12 = input[6] ?? 0;
+	const a13 = input[7] ?? 0;
+	const a20 = input[8] ?? 0;
+	const a21 = input[9] ?? 0;
+	const a22 = input[10] ?? 0;
+	const a23 = input[11] ?? 0;
 	const b00 = x * x * t + cos;
 	const b01 = y * x * t + z * sin;
 	const b02 = z * x * t - y * sin;
@@ -240,10 +241,10 @@ const rotateMat4 = (
 	const b22 = z * z * t + cos;
 
 	if (out !== input) {
-		out[12] = input[12];
-		out[13] = input[13];
-		out[14] = input[14];
-		out[15] = input[15];
+		out[12] = input[12] ?? 0;
+		out[13] = input[13] ?? 0;
+		out[14] = input[14] ?? 0;
+		out[15] = input[15] ?? 0;
 	}
 
 	out[0] = a00 * b00 + a10 * b01 + a20 * b02;
@@ -262,15 +263,15 @@ const rotateMat4 = (
 };
 
 const toInverseMat3 = (input: TMat4, out: TMat3 = createMat3()): TMat3 | null => {
-	const a00 = input[0];
-	const a01 = input[1];
-	const a02 = input[2];
-	const a10 = input[4];
-	const a11 = input[5];
-	const a12 = input[6];
-	const a20 = input[8];
-	const a21 = input[9];
-	const a22 = input[10];
+	const a00 = input[0] ?? 0;
+	const a01 = input[1] ?? 0;
+	const a02 = input[2] ?? 0;
+	const a10 = input[4] ?? 0;
+	const a11 = input[5] ?? 0;
+	const a12 = input[6] ?? 0;
+	const a20 = input[8] ?? 0;
+	const a21 = input[9] ?? 0;
+	const a22 = input[10] ?? 0;
 	const b01 = a22 * a11 - a12 * a21;
 	const b11 = -a22 * a10 + a12 * a20;
 	const b21 = a21 * a10 - a11 * a20;

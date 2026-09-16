@@ -1,4 +1,5 @@
 import { Document } from '@node-3d/glfw';
+import type { TKeyEvent } from '@node-3d/glfw';
 
 import { webgl as gl } from '@node-3d/webgl';
 import { mat4 } from './utils/matrix.ts';
@@ -50,43 +51,47 @@ const setMatrixUniforms = () => {
 		console.error('setMatrixUniforms():', gl.drawingBufferWidth, gl.drawingBufferHeight, error);
 	}
 };
-const currentlyPressedKeys: Record<number, boolean> = {};
+const currentlyPressedKeys: Record<string, boolean> = {};
 
 const handleKeys = (): void => {
-	if (currentlyPressedKeys[219]) {
+	if (currentlyPressedKeys.BracketLeft) {
 		// ]
 		z -= 0.05;
 	}
-	if (currentlyPressedKeys[221]) {
+	if (currentlyPressedKeys.BracketRight) {
 		// \
 		z += 0.05;
 	}
-	if (currentlyPressedKeys[37]) {
+	if (currentlyPressedKeys.ArrowLeft) {
 		// Left cursor key
 		ySpeed -= 1;
 	}
-	if (currentlyPressedKeys[39]) {
+	if (currentlyPressedKeys.ArrowRight) {
 		// Right cursor key
 		ySpeed += 1;
 	}
-	if (currentlyPressedKeys[38]) {
+	if (currentlyPressedKeys.ArrowUp) {
 		// Up cursor key
 		xSpeed -= 1;
 	}
-	if (currentlyPressedKeys[40]) {
+	if (currentlyPressedKeys.ArrowDown) {
 		// Down cursor key
 		xSpeed += 1;
 	}
 };
 
-document.on('keydown', (evt) => {
+document.on('keydown', (evt: TKeyEvent) => {
 	// console.log('[KEYDOWN]:', evt);
-	currentlyPressedKeys[evt.keyCode] = true;
+	if (evt.code) {
+		currentlyPressedKeys[evt.code] = true;
+	}
 	handleKeys();
 });
 
-document.on('keyup', (evt) => {
-	currentlyPressedKeys[evt.keyCode] = false;
+document.on('keyup', (evt: TKeyEvent) => {
+	if (evt.code) {
+		currentlyPressedKeys[evt.code] = false;
+	}
 });
 const cubeVertexPositionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
