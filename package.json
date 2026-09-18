@@ -20,15 +20,14 @@
 	"files": [
 		"dist",
 		"install.js",
-		"LICENSE",
-		"package.json",
-		"tsconfig.json"
+		"LICENSE"
 	],
 	"engines": {
 		"node": ">=22.18.0",
 		"npm": ">=10.9.0"
 	},
 	"scripts": {
+		"i": "npm install --workspaces=false",
 		"postinstall": "node install.js",
 		"build:rebuild": "cd src && node-gyp rebuild -j max --silent && node -e \"import('@node-3d/addon-tools').then((m) => m.cpbin('webgl'))\"",
 		"build:compile": "cd src && node-gyp build -j max --silent && node -e \"import('@node-3d/addon-tools').then((m) => m.cpbin('webgl'))\"",
