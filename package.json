@@ -51,8 +51,8 @@
 	},
 	"dependencies": {
 		"@node-3d/addon-tools": "~10.1.0",
-		"@node-3d/deps-opengl": "~8.0.0",
-		"@node-3d/segfault": "~4.0.0"
+		"@node-3d/deps-opengl": "~8.1.0",
+		"@node-3d/segfault": "~4.0.2"
 	},
 	"devDependencies": {
 		"@rslib/core": "1.0.0",
