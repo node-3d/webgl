@@ -35,7 +35,7 @@ jobs:
             node_arch: arm64
             archflags: ''
           - target: darwin-x64
-            os: macos-26
+            os: macos-26-intel
             node_arch: x64
             archflags: '-arch x86_64'
           - target: darwin-arm64
