@@ -55,6 +55,8 @@
 		"@node-3d/segfault": "~4.0.2"
 	},
 	"devDependencies": {
+		"@node-3d/glfw": "~7.4.0",
+		"@node-3d/image": "~6.0.2",
 		"@rslib/core": "1.0.0",
 		"@types/node": "24.13.2",
 		"node-addon-api": "8.9.2",
