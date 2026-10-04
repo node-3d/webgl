@@ -125,6 +125,27 @@ jobs:
           fi
           echo "version=$release_tag" >> "$GITHUB_OUTPUT"
 
+      - name: Verify macOS deployment target
+        if: startsWith(matrix.target, 'darwin-')
+        run: |
+          set -euo pipefail
+          checked=0
+          while IFS= read -r -d '' file; do
+            versions="$(otool -l "$file" | awk '
+              $1 == "cmd" {
+                wanted = $2 == "LC_BUILD_VERSION" ? "minos" : ($2 == "LC_VERSION_MIN_MACOSX" ? "version" : "")
+              }
+              wanted != "" && $1 == wanted { print $2; wanted = "" }
+            ')"
+            if [ -z "$versions" ] || printf '%s\n' "$versions" | grep -Evxq '13\.5(\.0)?'; then
+              echo "Unexpected or missing macOS deployment target: $file" >&2
+              printf '%s\n' "$versions" >&2
+              exit 1
+            fi
+            checked=$((checked + 1))
+          done < <(find bin-* -type f \( -name '*.node' -o -name '*.dylib' \) -print0)
+          test "$checked" -gt 0
+          echo "Verified $checked Mach-O files target macOS 13.5"
       - name: Pack Files
         id: pack-files
         run: node -e "import('@node-3d/addon-tools').then((m) => m.actionPack())" >> $GITHUB_OUTPUT
