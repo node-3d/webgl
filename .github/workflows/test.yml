@@ -5,18 +5,31 @@ defaults:
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
+  package:
+    name: Pack npm Candidate
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.13.0
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Store npm Candidate
+        uses: node-3d/addon-tools/actions/npm-candidate-upload@1073c0a6403f6c20df2135f03950a568e865aa16
+
   unit-tests:
     name: Unit Tests (${{ matrix.target }})
     strategy:
       fail-fast: false
-      matrix:
+      matrix: &native-matrix
         include:
           - target: windows-x64
             os: windows-2022
@@ -42,37 +55,75 @@ jobs:
             os: macos-26
             node_arch: arm64
             archflags: '-arch arm64'
-
     runs-on: ${{ matrix.os }}
-
     steps:
-
       - name: Fetch Repository
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24.13.0
           architecture: ${{ matrix.node_arch }}
-          cache: 'npm'
-
-      - name: Print Native Target
-        run: |
-          echo "runner=$(uname -s)-$(uname -m)"
-          node -p "'node=' + process.version + ' platform=' + process.platform + ' arch=' + process.arch"
-          npm config get arch
-
+          cache: npm
       - name: Install Modules
         run: npm ci
-
       - name: Build Current Binary
         run: npm run build:rebuild
         env:
           ARCHFLAGS: ${{ matrix.archflags }}
-
       - name: Run Unit Tests
-        if: matrix.target == 'linux-x64' || matrix.target == 'linux-arm64' || matrix.target == 'darwin-x64' || matrix.target == 'darwin-arm64'
+        if: startsWith(matrix.target, 'linux-') || startsWith(matrix.target, 'darwin-')
         run: npm run test:ci
+      - name: Verify macOS deployment target
+        if: startsWith(matrix.target, 'darwin-')
+        run: |
+          set -euo pipefail
+          checked=0
+          while IFS= read -r -d '' file; do
+            versions="$(otool -l "$file" | awk '
+              $1 == "cmd" {
+                wanted = $2 == "LC_BUILD_VERSION" ? "minos" : ($2 == "LC_VERSION_MIN_MACOSX" ? "version" : "")
+              }
+              wanted != "" && $1 == wanted { print $2; wanted = "" }
+            ')"
+            if [ -z "$versions" ] || printf '%s\n' "$versions" | grep -Evxq '13\.5(\.0)?'; then
+              echo "Unexpected or missing macOS deployment target: $file" >&2
+              printf '%s\n' "$versions" >&2
+              exit 1
+            fi
+            checked=$((checked + 1))
+          done < <(find bin-* -type f \( -name '*.node' -o -name '*.dylib' \) -print0)
+          test "$checked" -gt 0
+          echo "Verified $checked Mach-O files target macOS 13.5"
+      - name: Store Native Candidate
+        uses: node-3d/addon-tools/actions/native-candidate-upload@1073c0a6403f6c20df2135f03950a568e865aa16
+        with:
+          artifact-name: native-${{ matrix.target }}
+
+  consumer-tests:
+    name: Packed Consumer (${{ matrix.target }})
+    needs: [package, unit-tests]
+    strategy:
+      fail-fast: false
+      matrix: *native-matrix
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.13.0
+          architecture: ${{ matrix.node_arch }}
+      - name: Install Packed Consumer Candidate
+        id: consumer
+        uses: node-3d/addon-tools/actions/consumer-install@1073c0a6403f6c20df2135f03950a568e865aa16
+        with:
+          package-name: '@node-3d/webgl'
+          binary-artifact: native-${{ matrix.target }}
+          fixture: test-consumer
+      - name: Run Packed Consumer Tests
+        working-directory: ${{ steps.consumer.outputs.directory }}
+        run: npm test

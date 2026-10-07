@@ -1,7 +1,7 @@
 {
 	"author": "Luis Blanco <luisblanco1337@gmail.com>",
 	"name": "@node-3d/webgl",
-	"version": "6.0.2",
+	"version": "6.0.3",
 	"description": "WebGL for Node.js",
 	"license": "MIT",
 	"main": "dist/index.js",
@@ -33,12 +33,13 @@
 		"build:compile": "cd src && node-gyp build -j max && node -e \"import('@node-3d/addon-tools').then((m) => m.cpbin('webgl'))\"",
 		"test:watch": "node --test --watch \"ts/**/*.test.ts\"",
 		"test:ci": "node --test \"ts/**/*.test.ts\"",
-		"lint:all": "npm run lint:gypi && npm run lint:ts && npm run lint:oxlint",
+		"lint:all": "npm run lint:gypi && npm run lint:ts && npm run lint:ts:consumer && npm run lint:oxlint",
 		"lint:gypi": "node -e \"import('@node-3d/addon-tools').then((m) => m.checkGypi())\"",
 		"lint:oxlint": "oxlint .",
 		"build:ci": "rslib build",
 		"build:watch": "rslib build --watch",
 		"lint:ts": "tsc -p tsconfig.json --noEmit",
+		"lint:ts:consumer": "tsc -p test-consumer/tsconfig.json --noEmit",
 		"prepack": "npm run build:ci",
 		"format:src": "node -e \"import('@node-3d/addon-tools').then((m) => m.cpclangformat())\" && node -e \"const { readdirSync } = require('node:fs'); const { execFileSync } = require('node:child_process'); const { clangFormatPath } = require('clang-format-node'); const files = readdirSync('src/cpp').filter((file) => /\\.(?:cpp|hpp)$/.test(file)).map((file) => 'src/cpp/' + file); execFileSync(clangFormatPath, ['-i', ...files], { stdio: 'inherit' });\"",
 		"format:src:ci": "node -e \"import('@node-3d/addon-tools').then((m) => m.cpclangformat())\" && node -e \"const { readdirSync } = require('node:fs'); const { execFileSync } = require('node:child_process'); const { clangFormatPath } = require('clang-format-node'); const files = readdirSync('src/cpp').filter((file) => /\\.(?:cpp|hpp)$/.test(file)).map((file) => 'src/cpp/' + file); execFileSync(clangFormatPath, ['--dry-run', '--Werror', ...files], { stdio: 'inherit' });\"",
@@ -50,9 +51,9 @@
 		"url": "git+https://github.com/node-3d/webgl.git"
 	},
 	"dependencies": {
-		"@node-3d/addon-tools": "~10.1.0",
-		"@node-3d/deps-opengl": "~8.1.0",
-		"@node-3d/segfault": "~4.0.2"
+		"@node-3d/addon-tools": "~10.2.0",
+		"@node-3d/deps-opengl": "~8.1.1",
+		"@node-3d/segfault": "~4.0.3"
 	},
 	"devDependencies": {
 		"@node-3d/glfw": "~7.4.0",

@@ -17,46 +17,24 @@ permissions:
   attestations: write
 
 jobs:
-  create_release:
-    name: Create Release
-    runs-on: ubuntu-latest
-
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-
+  package:
+    name: Pack npm Candidate
+    runs-on: ubuntu-22.04
     steps:
-
-      - name: Fetch Repository
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.13.0
-          cache: 'npm'
-
-      - name: Get Package Version
-        id: package-version
-        run: |
-          release_tag="${{ inputs.release_tag }}"
-          if [ -z "$release_tag" ]; then
-            release_tag="$(node -p "require('./package').version")"
-          fi
-          echo "version=$release_tag" >> "$GITHUB_OUTPUT"
-
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.package-version.outputs.version }}
-          name: Release ${{ steps.package-version.outputs.version }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Store npm Candidate
+        uses: node-3d/addon-tools/actions/npm-candidate-upload@1073c0a6403f6c20df2135f03950a568e865aa16
 
   build:
     name: Build (${{ matrix.target }})
+    needs: package
     strategy:
       fail-fast: false
       matrix:
@@ -116,15 +94,6 @@ jobs:
         env:
           ARCHFLAGS: ${{ matrix.archflags }}
 
-      - name: Get Package Version
-        id: package-version
-        run: |
-          release_tag="${{ inputs.release_tag }}"
-          if [ -z "$release_tag" ]; then
-            release_tag="$(node -p "require('./package').version")"
-          fi
-          echo "version=$release_tag" >> "$GITHUB_OUTPUT"
-
       - name: Verify macOS deployment target
         if: startsWith(matrix.target, 'darwin-')
         run: |
@@ -146,20 +115,87 @@ jobs:
           done < <(find bin-* -type f \( -name '*.node' -o -name '*.dylib' \) -print0)
           test "$checked" -gt 0
           echo "Verified $checked Mach-O files target macOS 13.5"
-      - name: Pack Files
-        id: pack-files
-        run: node -e "import('@node-3d/addon-tools').then((m) => m.actionPack())" >> $GITHUB_OUTPUT
+      - name: Store Native Candidate
+        uses: node-3d/addon-tools/actions/native-candidate-upload@1073c0a6403f6c20df2135f03950a568e865aa16
+        with:
+          artifact-name: native-${{ matrix.target }}
 
-      - name: Attest Binary
+  consumer-tests:
+    name: Packed Consumer (${{ matrix.target }})
+    needs: [package, build]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: windows-x64
+            os: windows-2022
+            node_arch: x64
+          - target: windows-arm64
+            os: windows-11-arm
+            node_arch: arm64
+          - target: linux-x64
+            os: ubuntu-22.04
+            node_arch: x64
+          - target: linux-arm64
+            os: ubuntu-22.04-arm
+            node_arch: arm64
+          - target: darwin-x64
+            os: macos-26-intel
+            node_arch: x64
+          - target: darwin-arm64
+            os: macos-26
+            node_arch: arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.13.0
+          architecture: ${{ matrix.node_arch }}
+      - name: Install Packed Consumer Candidate
+        id: consumer
+        uses: node-3d/addon-tools/actions/consumer-install@1073c0a6403f6c20df2135f03950a568e865aa16
+        with:
+          package-name: '@node-3d/webgl'
+          binary-artifact: native-${{ matrix.target }}
+          fixture: test-consumer
+      - name: Run Packed Consumer Tests
+        working-directory: ${{ steps.consumer.outputs.directory }}
+        run: npm test
+
+  release:
+    name: Create Release
+    needs: consumer-tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Get Package Version
+        id: package-version
+        run: |
+          release_tag="${{ inputs.release_tag }}"
+          if [ -z "$release_tag" ]; then
+            release_tag="$(node -p "require('./package').version")"
+          fi
+          echo "version=$release_tag" >> "$GITHUB_OUTPUT"
+      - name: Download Native Candidates
+        uses: actions/download-artifact@v8
+        with:
+          pattern: native-*
+          path: release-candidates
+          merge-multiple: true
+      - name: Attest Binaries
         uses: actions/attest@v4
         with:
-          subject-path: ${{ steps.pack-files.outputs.pack }}
-
-      - name: Store Binaries
+          subject-path: release-candidates/*.gz
+      - name: Create Release
         uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.package-version.outputs.version }}
           name: Release ${{ steps.package-version.outputs.version }}
-          files: ${{ steps.pack-files.outputs.pack }}
+          files: release-candidates/*.gz

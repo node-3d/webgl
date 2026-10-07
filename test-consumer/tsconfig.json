@@ -1,0 +1,9 @@
+{
+	"extends": "@node-3d/addon-tools/tsconfig.base.json",
+	"compilerOptions": {
+		"paths": {
+			"@node-3d/webgl": ["../ts/index.ts"]
+		}
+	},
+	"include": ["*.ts"]
+}
